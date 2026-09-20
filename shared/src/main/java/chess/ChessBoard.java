@@ -29,7 +29,7 @@ public class ChessBoard {
 
     public ChessBoard(ChessBoard original) {
         for (int row = 0; row < 8; row++) {
-            System.arraycopy(original.squares[row], 0, this.square[row], 0, 8);
+            System.arraycopy(original.squares[row], 0, this.squares[row], 0, 8);
         }
     }
 
@@ -71,7 +71,7 @@ public class ChessBoard {
         for(int col = 1; col <= 8; col++) {
             addPiece(new ChessPosition(1, col), new ChessPiece(ChessGame.TeamColor.WHITE, BACK_ROW[col - 1]));
             addPiece(new ChessPosition(2, col), new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN));
-            addPiece(new ChessPosition(7, col), new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.Pawn));
+            addPiece(new ChessPosition(7, col), new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN));
             addPiece(new ChessPosition(8, col), new ChessPiece(ChessGame.TeamColor.BLACK, BACK_ROW[col -1]));
         }
     }
@@ -94,5 +94,16 @@ public class ChessBoard {
     }
 
     @Override 
-    public String toString()
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        for (int row = 8; row >= 1; row--) {
+            builder.append('|');
+            for (int col = 1; col <= 8; col++) {
+                ChessPiece piece = getPiece(new ChessPosition(row, col));
+                builder.append(piece == null ? " " : piece.toString ()).append('|');
+            }
+            builder.append('\n');
+        }
+        return builder.toString();
+    }
 }

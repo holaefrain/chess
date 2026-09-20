@@ -34,10 +34,21 @@ public class ChessPosition {
         return col;
     }
 
+    /**    (non-Javadoc)
+     * @return true if this position is on the 8x8 boatd
+     */
+    public boolean isOnBoard() {
+        return row >= 1 && row <= 8 && col >= 1 && col <= 8;
+    }
+
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        } 
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         ChessPosition that = (ChessPosition) o;
         return row == that.row && col == that.col;
     }
@@ -48,7 +59,7 @@ public class ChessPosition {
     }
 
     @Override 
-    public int toString() {
+    public String toString() {
         return "" + (char) ('a' + col - 1) + row;
     }
 }
