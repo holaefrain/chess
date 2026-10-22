@@ -17,4 +17,24 @@ public class UserService {
         this.userDAO = userDAO;
         this.authDAO = authDAO;
     }
+
+    public AuthResult register(RegisterRequest request) throws BadRequestException, AlreadyTakenException, DataAccessException {
+        if (request == null
+            || isBlank(request.username())
+            || isBlank(request.password())
+            || isBlank(request.email())) {
+                throw new BadRequestException();
+            }
+
+            //Unique Username
+            if (userDAO.getUser(request.username()) != null) {
+                throw new AlreadyTakenException();
+            }
+
+            userDAO.createUser(new UserData(request.username(), request.password(), request.email()));
+
+            //Registering logs the user in
+            return createSession(request.username());
+        }
+    }
 }
