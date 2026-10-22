@@ -15,4 +15,22 @@ public class GameService {
         this.gameDAO = gameDAO;
         this.authDAO = authDAO;
     }
+
+    public ListGamesResult listGames(String authToken) throws UnauthorizedException, DataAccessException {
+        authenticate(authToken);
+        return new ListGamesResult(gameDAO.listGames());
+    }
+
+    public CreateGameResult createGame(String authToken, CreateGameRequest request) throws UnauthorizedException, BadRequestException, DataAccessException {
+        authenticate(authToken);
+
+        if (request == null || request.gameName() == null || request.gameName().isBlank()) {
+            throw new BadRequestException();
+        }
+
+        //DAO picks the ID
+        int gameID = gameDAO.createGame(request.gameName());
+        return new CreateGameResult(gameID);
+    }
+
 }
