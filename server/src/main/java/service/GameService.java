@@ -33,4 +33,37 @@ public class GameService {
         return new CreateGameResult(gameID);
     }
 
+    public void joinGame(String authToken, JoinGameRequest request) throws UnauthorizedException, BadRequestException, AlreadyTakenException, DataAccessException {
+        //need username from token to put into game
+        AuthData auth = authenticate(authToken);
+
+        if (request == null || request.gameID() == null) {
+            throw new BadRequestException();
+        }
+
+        //Turns white/black into the enum; anything else = 400
+        ChessGame.TeamColor color = parseColor(request.playerColor());
+
+        GameData game = gameDAO.getGame(request.gameID());
+        if (game == null) {
+            throw new BadRequestException();
+        }
+
+        //Records are immutable
+        GameData updated;
+        if (color == ChessGame.TeamColor.WHITE) {
+            if (game.whiteUsername() != null) {
+                throw new AlreadyTakenException();
+            }
+            updated = new GameData(game.gameID(), auth.username(), game.blackUsername(), game.gameName(), game.game());
+        } else {
+            if (game.blackUsername() != null) {
+                throw new AlreadyTakenException();
+            }
+            updated = new GameData(game.gameID(), game.whiteUsername(), auth.username(), game.gameName(), game.game());
+        }
+
+        gameDAO.updateGame(updated);
+    }
+
 }
