@@ -64,4 +64,17 @@ public class UserServiceTests {
         Assertions.assertNotNull(authDAO.getAuth(result.authToken()));
     }
 
+    @Test
+    void loginIssuesUniqueTokens() throws Exception {
+        service.register(validRegister);
+
+        AuthResult first = service.login(new LoginRequest("alex", "pw"));
+        AuthResult second = service.login(new LoginRequest("alex", "pw"));
+
+        // Two logins, two tokens, both valid
+        Assertions.assertNotEquals(first.authToken(), second.authToken());
+        Assertions.assertNotNull(authDAO.getAuth(first.authToken()));
+        Assertions.assertNotNull(authDAO.getAuth(second.authToken()));
+    }
+
 }
