@@ -54,4 +54,14 @@ public class UserServiceTests {
         Assertions.assertThrows(BadRequestException.class, () -> service.register(null));
     } 
 
+    @Test
+    void loginSuccess() throws Exception {
+        service.register(validRegister);
+
+        AuthResult result = service.login(new LoginRequest("alex", "pw"));
+
+        Assertions.assertEquals("alex", result.username());
+        Assertions.assertNotNull(authDAO.getAuth(result.authToken()));
+    }
+
 }
