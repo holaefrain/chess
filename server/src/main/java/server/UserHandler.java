@@ -29,4 +29,10 @@ public class UserHandler {
         LoginRequest request = HandlerUtil.readBody(ctx, LoginRequest.class);
         HandlerUtil.send(ctx, userService.login(request));
     }
+
+    // DELETE /session
+    public void logout(Context ctx) throws UnauthorizedException, DataAccessException {
+        userService.logout(HandlerUtil.authToken(ctx));
+        HandlerUtil.sendEmpty(ctx);
+    }
 }
