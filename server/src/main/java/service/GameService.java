@@ -75,4 +75,13 @@ public class GameService {
         return auth;
     }
 
+    private static ChessGame.TeamColor parseColor(String playerColor) throws BadRequestException {
+        if ("WHITE".equals(playerColor)) {
+            return ChessGame.TeamColor.WHITE;
+        }
+        if ("BLACK".equals(playerColor)) {
+            return ChessGame.TeamColor.BLACK;
+        }
+        throw new BadRequestException();
+    }
 }
