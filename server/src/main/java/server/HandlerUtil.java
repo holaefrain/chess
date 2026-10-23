@@ -19,4 +19,20 @@ final class HandlerUtil {
     static <T> T readBody(Context ctx, Class<T> type) {
         return GSON.fromJson(ctx.body(), type);
     }
+
+    static void send(Context ctx, Object body) {
+        ctx.contentType("application/json");
+        ctx.result(GSON.toJson(body));
+    }
+
+    // Endpoints with nothing to return still send {}
+    static void sendEmpty(Context ctx) {
+        ctx.contentType("application/json");
+        ctx.result("{}");
+    }
+
+    static void sendError(Context ctx, int status, String message) {
+        ctx.status(status);
+        send(ctx, new ErrorResult(message));
+    }
 }
