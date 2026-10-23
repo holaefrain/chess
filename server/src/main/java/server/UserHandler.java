@@ -22,4 +22,11 @@ public class UserHandler {
         RegisterRequest request = HandlerUtil.readBody(ctx, RegisterRequest.class);
         HandlerUtil.send(ctx, userService.register(request));
     }
+
+    // POST /session
+    public void login(Context ctx)
+            throws BadRequestException, UnauthorizedException, DataAccessException {
+        LoginRequest request = HandlerUtil.readBody(ctx, LoginRequest.class);
+        HandlerUtil.send(ctx, userService.login(request));
+    }
 }
