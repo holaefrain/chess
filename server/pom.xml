@@ -82,6 +82,25 @@
                     <mainClass>server.ServerMain</mainClass>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.12</version>
+                <executions>
+                    <!-- Attaches the JaCoCo agent to the test JVM so it can record which lines run -->
+                    <execution>
+                        <goals>
+                            </goals>
+                    </execution>
+                    <!-- Turns the recorded data into an HTML report after the tests finish -->
+                    <execution>
+                        <id>report</id>
+                        <phase>test</phase>
+                        <goals>
+                            </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 </project>
