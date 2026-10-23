@@ -66,4 +66,13 @@ public class GameService {
         gameDAO.updateGame(updated);
     }
 
+    //looks up token, returns authdata so callers can read username
+    private AuthData authenticate(String authToken) throws UnauthorizedException, DataAccessException {
+        AuthData auth = authToken == null ? null : authDAO.getAuth(authToken);
+        if (auth == null) {
+            throw new UnauthorizedException();
+        }
+        return auth;
+    }
+
 }
