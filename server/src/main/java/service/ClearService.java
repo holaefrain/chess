@@ -16,7 +16,7 @@ public class ClearService {
         this.authDAO = authDAO;
     }
 
-    //wipes everything
+    // Wipes everything
     public void clear() throws DataAccessException {
         userDAO.clear();
         gameDAO.clear();

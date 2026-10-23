@@ -16,32 +16,35 @@ public class GameService {
         this.authDAO = authDAO;
     }
 
-    public ListGamesResult listGames(String authToken) throws UnauthorizedException, DataAccessException {
+    public ListGamesResult listGames(String authToken)
+            throws UnauthorizedException, DataAccessException {
         authenticate(authToken);
         return new ListGamesResult(gameDAO.listGames());
     }
 
-    public CreateGameResult createGame(String authToken, CreateGameRequest request) throws UnauthorizedException, BadRequestException, DataAccessException {
+    public CreateGameResult createGame(String authToken, CreateGameRequest request)
+            throws UnauthorizedException, BadRequestException, DataAccessException {
         authenticate(authToken);
 
         if (request == null || request.gameName() == null || request.gameName().isBlank()) {
             throw new BadRequestException();
         }
 
-        //DAO picks the ID
+        // DAO picks the ID
         int gameID = gameDAO.createGame(request.gameName());
         return new CreateGameResult(gameID);
     }
 
-    public void joinGame(String authToken, JoinGameRequest request) throws UnauthorizedException, BadRequestException, AlreadyTakenException, DataAccessException {
-        //need username from token to put into game
+    public void joinGame(String authToken, JoinGameRequest request)
+            throws UnauthorizedException, BadRequestException, AlreadyTakenException, DataAccessException {
+        // Need username from token to put into game
         AuthData auth = authenticate(authToken);
 
         if (request == null || request.gameID() == null) {
             throw new BadRequestException();
         }
 
-        //Turns white/black into the enum; anything else = 400
+        // Turns white/black into the enum; anything else = 400
         ChessGame.TeamColor color = parseColor(request.playerColor());
 
         GameData game = gameDAO.getGame(request.gameID());
@@ -49,25 +52,28 @@ public class GameService {
             throw new BadRequestException();
         }
 
-        //Records are immutable
+        // Records are immutable
         GameData updated;
         if (color == ChessGame.TeamColor.WHITE) {
             if (game.whiteUsername() != null) {
                 throw new AlreadyTakenException();
             }
-            updated = new GameData(game.gameID(), auth.username(), game.blackUsername(), game.gameName(), game.game());
+            updated = new GameData(game.gameID(), auth.username(), game.blackUsername(),
+                    game.gameName(), game.game());
         } else {
             if (game.blackUsername() != null) {
                 throw new AlreadyTakenException();
             }
-            updated = new GameData(game.gameID(), game.whiteUsername(), auth.username(), game.gameName(), game.game());
+            updated = new GameData(game.gameID(), game.whiteUsername(), auth.username(),
+                    game.gameName(), game.game());
         }
 
         gameDAO.updateGame(updated);
     }
 
-    //looks up token, returns authdata so callers can read username
-    private AuthData authenticate(String authToken) throws UnauthorizedException, DataAccessException {
+    // Looks up token, returns AuthData so callers can read username
+    private AuthData authenticate(String authToken)
+            throws UnauthorizedException, DataAccessException {
         AuthData auth = authToken == null ? null : authDAO.getAuth(authToken);
         if (auth == null) {
             throw new UnauthorizedException();
