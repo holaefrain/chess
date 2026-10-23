@@ -5,9 +5,9 @@ import dataaccess.MemoryAuthDAO;
 import dataaccess.MemoryUserDAO;
 import dataaccess.UserDAO;
 
-import org.jupiter.api.Assertions;
-import org.jupiter.api.BeforeEach;
-import org.jupiter.api.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class UserServiceTests {
     private UserDAO userDAO;
@@ -25,4 +25,33 @@ public class UserServiceTests {
     }
 
     //tests
+    @Test
+    void registerSuccess() throws Exception {
+        AuthResult result = service.register(validRegister);
+
+        Assertions.assertEquals("alex", result.username());
+        Assertions.assertNotNull(result.authToken());
+        //check the stores not just return values
+        Assertions.assertNotNull(userDAO.getUser("alex"));
+        Assertions.assertNotNull(authDAO.getAuth(result.authToken()));
+    }
+
+    //duplicate username
+    @Test
+    void registerDuplicateUsernameThrowsAlreadyTaken() throws Exception {
+        service.register(validRegister);
+
+        Assertions.assertThrows(AlreadyTakenException.class, () -> service.register(validRegister));
+    }
+
+    //missing fields
+    @Test
+    void registerMissingFieldThrowsBadRequest() {
+        //each required field missing in order
+        Assertions.assertThrows(BadRequestException.class, () -> service.register(new RegisterRequest("alex", null, "a@email.com")));
+        Assertions.assertThrows(BadRequestException.class, () -> service.register(new RegisterRequest(null, "pw", "a@email.com")));
+        Assertions.assertThrows(BadRequestException.class, () -> service.register(new RegisterRequest("alex", "pw", "")));
+        Assertions.assertThrows(BadRequestException.class, () -> service.register(null));
+    } 
+
 }
