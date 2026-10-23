@@ -17,5 +17,12 @@ public class UserServiceTests {
     private final RegisterRequest validRegister = new RegisterRequest("alex", "pw" , "a@email.com");
 
     //fresh DAOs for every test so nothing leaks
+    @BeforeEach
+    void setUp() {
+        userDAO = new MemoryUserDAO();
+        authDAO = new MemoryAuthDAO();
+        service = new UserService(userDAO, authDAO);
+    }
 
+    //tests
 }
