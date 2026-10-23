@@ -27,4 +27,12 @@ public class GameHandler {
         CreateGameRequest request = HandlerUtil.readBody(ctx, CreateGameRequest.class);
         HandlerUtil.send(ctx, gameService.createGame(HandlerUtil.authToken(ctx), request));
     }
+
+    // PUT /game
+    public void joinGame(Context ctx)
+            throws UnauthorizedException, BadRequestException, AlreadyTakenException, DataAccessException {
+        JoinGameRequest request = HandlerUtil.readBody(ctx, JoinGameRequest.class);
+        gameService.joinGame(HandlerUtil.authToken(ctx), request);
+        HandlerUtil.sendEmpty(ctx);
+    }
 }
