@@ -20,4 +20,11 @@ public class GameHandler {
     public void listGames(Context ctx) throws UnauthorizedException, DataAccessException {
         HandlerUtil.send(ctx, gameService.listGames(HandlerUtil.authToken(ctx)));
     }
+
+    // POST /game
+    public void createGame(Context ctx)
+            throws UnauthorizedException, BadRequestException, DataAccessException {
+        CreateGameRequest request = HandlerUtil.readBody(ctx, CreateGameRequest.class);
+        HandlerUtil.send(ctx, gameService.createGame(HandlerUtil.authToken(ctx), request));
+    }
 }
