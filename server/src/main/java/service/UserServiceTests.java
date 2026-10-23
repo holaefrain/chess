@@ -54,6 +54,7 @@ public class UserServiceTests {
         Assertions.assertThrows(BadRequestException.class, () -> service.register(null));
     } 
 
+    //login success
     @Test
     void loginSuccess() throws Exception {
         service.register(validRegister);
@@ -64,6 +65,7 @@ public class UserServiceTests {
         Assertions.assertNotNull(authDAO.getAuth(result.authToken()));
     }
 
+    //login token
     @Test
     void loginIssuesUniqueTokens() throws Exception {
         service.register(validRegister);
@@ -71,10 +73,26 @@ public class UserServiceTests {
         AuthResult first = service.login(new LoginRequest("alex", "pw"));
         AuthResult second = service.login(new LoginRequest("alex", "pw"));
 
-        // Two logins, two tokens, both valid
+        // two logins, two tokens, both valid
         Assertions.assertNotEquals(first.authToken(), second.authToken());
         Assertions.assertNotNull(authDAO.getAuth(first.authToken()));
         Assertions.assertNotNull(authDAO.getAuth(second.authToken()));
+    }
+
+    //wrong password
+    @Test
+    void loginWrongPasswordThrowsUnauthorized() throws Exception {
+        service.register(validRegister);
+
+        Assertions.assertThrows(UnauthorizedException.class,
+                () -> service.login(new LoginRequest("alex", "wrong")));
+    }
+
+    //unknown user
+    @Test
+    void loginUnknownUserThrowsUnauthorized() {
+        Assertions.assertThrows(UnauthorizedException.class,
+                () -> service.login(new LoginRequest("nobody", "pw")));
     }
 
 }
