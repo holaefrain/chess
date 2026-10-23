@@ -9,4 +9,14 @@ final class HandlerUtil {
 
     private HandlerUtil() {
     }
+
+    // Token comes from the authorization header; null when it's missing
+    static String authToken(Context ctx) {
+        return ctx.header("authorization");
+    }
+
+    // Empty or missing body becomes null, which the services treat as a bad request
+    static <T> T readBody(Context ctx, Class<T> type) {
+        return GSON.fromJson(ctx.body(), type);
+    }
 }
