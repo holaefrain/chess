@@ -15,4 +15,9 @@ public class GameHandler {
     public GameHandler(GameService gameService) {
         this.gameService = gameService;
     }
+
+    // GET /game
+    public void listGames(Context ctx) throws UnauthorizedException, DataAccessException {
+        HandlerUtil.send(ctx, gameService.listGames(HandlerUtil.authToken(ctx)));
+    }
 }
