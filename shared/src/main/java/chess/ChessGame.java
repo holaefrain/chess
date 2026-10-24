@@ -164,7 +164,7 @@ public class ChessGame {
     public ChessBoard getBoard() {
         return board;
     }
-    
+
      /**
      * @return true if the given team has no legal move with any of its pieces
      */

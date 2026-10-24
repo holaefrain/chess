@@ -16,9 +16,9 @@ public class ChessBoard {
     private final ChessPiece[][] squares = new ChessPiece[8][8];
 
     private static final ChessPiece.PieceType[] BACK_ROW = {
-        ChessPiece.PieceType.ROOK, ChessPiece.PieceType.KNIGHT, 
-        ChessPiece.PieceType.BISHOP, ChessPiece.PieceType.QUEEN, 
-        ChessPiece.PieceType.KING, ChessPiece.PieceType.BISHOP, 
+        ChessPiece.PieceType.ROOK, ChessPiece.PieceType.KNIGHT,
+        ChessPiece.PieceType.BISHOP, ChessPiece.PieceType.QUEEN,
+        ChessPiece.PieceType.KING, ChessPiece.PieceType.BISHOP,
         ChessPiece.PieceType.KNIGHT, ChessPiece.PieceType.ROOK
     };
 
@@ -79,7 +79,7 @@ public class ChessBoard {
         }
     }
 
-    @Override 
+    @Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
@@ -96,7 +96,7 @@ public class ChessBoard {
         return Arrays.deepHashCode(squares);
     }
 
-    @Override 
+    @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
         for (int row = 8; row >= 1; row--) {

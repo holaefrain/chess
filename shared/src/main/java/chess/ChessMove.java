@@ -45,7 +45,7 @@ public class ChessMove {
         return promotionPiece;
     }
 
-    @Override 
+    @Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
@@ -54,12 +54,12 @@ public class ChessMove {
             return false;
         }
         ChessMove that = (ChessMove) o;
-        return Objects.equals(startPosition, that.startPosition) 
-            && Objects.equals(endPosition, that.endPosition) 
+        return Objects.equals(startPosition, that.startPosition)
+            && Objects.equals(endPosition, that.endPosition)
             && promotionPiece == that.promotionPiece;
     }
 
-    @Override 
+    @Override
     public int hashCode() {
         return Objects.hash(startPosition, endPosition, promotionPiece);
     }

@@ -45,7 +45,7 @@ public class ChessPosition {
     public boolean equals(Object o) {
         if (this == o) {
             return true;
-        } 
+        }
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
@@ -58,7 +58,7 @@ public class ChessPosition {
         return Objects.hash(row, col);
     }
 
-    @Override 
+    @Override
     public String toString() {
         return "" + (char) ('a' + col - 1) + row;
     }

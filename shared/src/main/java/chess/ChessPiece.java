@@ -15,9 +15,9 @@ public class ChessPiece {
     private final ChessGame.TeamColor pieceColor;
     private final PieceType type;
 
-    /** 
-     * Whether this piece has moved during the current game. 
-     * Used by ChessGame to decide castling privleges. 
+    /**
+     * Whether this piece has moved during the current game.
+     * Used by ChessGame to decide castling privileges.
      * Excluded from equals/hashCode so that two boards with the same
      * pieces in the same squares are equal */
     private boolean hasMoved = false;
