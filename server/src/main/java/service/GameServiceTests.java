@@ -112,4 +112,36 @@ public class GameServiceTests {
         Assertions.assertEquals("bob", game.blackUsername());
     }
 
+    @Test
+    void joinGameBothSeats() throws Exception {
+        int gameID = newGame();
+
+        service.joinGame(ALEX_TOKEN, new JoinGameRequest("WHITE", gameID));
+        service.joinGame(BOB_TOKEN, new JoinGameRequest("BLACK", gameID));
+
+        //second join must keep the first seat intact
+        GameData game = gameDAO.getGame(gameID);
+        Assertions.assertEquals("alex", game.whiteUsername());
+        Assertions.assertEquals("bob", game.blackUsername());
+    }
+
+    @Test
+    void joinGameTakenWhiteThrowsAlreadyTaken() throws Exception {
+        int gameID = newGame();
+        service.joinGame(ALEX_TOKEN, new JoinGameRequest("WHITE", gameID));
+
+        Assertions.assertThrows(AlreadyTakenException.class,
+                () -> service.joinGame(BOB_TOKEN, new JoinGameRequest("WHITE", gameID)));
+    }
+
+    @Test
+    void joinGameTakenBlackThrowsAlreadyTaken() throws Exception {
+        int gameID = newGame();
+        service.joinGame(ALEX_TOKEN, new JoinGameRequest("BLACK", gameID));
+
+        Assertions.assertThrows(AlreadyTakenException.class,
+                () -> service.joinGame(BOB_TOKEN, new JoinGameRequest("BLACK", gameID)));
+    }
+
+
 }
