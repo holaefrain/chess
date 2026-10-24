@@ -46,4 +46,12 @@ public class GameServiceTests {
         Assertions.assertNull(stored.blackUsername());
         Assertions.assertNotNull(stored.game());
     }
+
+    @Test
+    void createGameBadTokenThrowsUnauthorized() {
+        Assertions.assertThrows(UnauthorizedException.class,
+                () -> service.createGame("bad", new CreateGameRequest("first")));
+        Assertions.assertThrows(UnauthorizedException.class,
+                () -> service.createGame(null, new CreateGameRequest("first")));
+    }
 }
