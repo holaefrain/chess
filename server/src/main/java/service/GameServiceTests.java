@@ -54,4 +54,14 @@ public class GameServiceTests {
         Assertions.assertThrows(UnauthorizedException.class,
                 () -> service.createGame(null, new CreateGameRequest("first")));
     }
+
+    @Test
+    void createGameMissingNameThrowsBadRequest() {
+        Assertions.assertThrows(BadRequestException.class,
+                () -> service.createGame(ALEX_TOKEN, new CreateGameRequest(null)));
+        Assertions.assertThrows(BadRequestException.class,
+                () -> service.createGame(ALEX_TOKEN, new CreateGameRequest("")));
+        Assertions.assertThrows(BadRequestException.class,
+                () -> service.createGame(ALEX_TOKEN, null));
+    }
 }
