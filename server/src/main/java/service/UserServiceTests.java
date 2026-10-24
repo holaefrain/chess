@@ -95,4 +95,41 @@ public class UserServiceTests {
                 () -> service.login(new LoginRequest("nobody", "pw")));
     }
 
+    //missing field
+    @Test
+    void loginMissingFieldThrowsBadRequest() {
+        Assertions.assertThrows(BadRequestException.class,
+                () -> service.login(new LoginRequest(null, "pw")));
+        Assertions.assertThrows(BadRequestException.class,
+                () -> service.login(new LoginRequest("alex", null)));
+        Assertions.assertThrows(BadRequestException.class, () -> service.login(null));
+    }
+
+    //logout success
+    @Test
+    void logoutSuccess() throws Exception {
+        AuthResult result = service.register(validRegister);
+
+        service.logout(result.authToken());
+
+        // Token is gone from the store
+        Assertions.assertNull(authDAO.getAuth(result.authToken()));
+    }
+
+    //login twice throws
+    @Test
+    void logoutTwiceThrowsUnauthorized() throws Exception {
+        AuthResult result = service.register(validRegister);
+        service.logout(result.authToken());
+
+        Assertions.assertThrows(UnauthorizedException.class, () -> service.logout(result.authToken()));
+    }
+
+    //
+    @Test
+    void logoutBadTokenThrowsUnauthorized() {
+        Assertions.assertThrows(UnauthorizedException.class, () -> service.logout("not-a-token"));
+        Assertions.assertThrows(UnauthorizedException.class, () -> service.logout(null));
+    }
+
 }
