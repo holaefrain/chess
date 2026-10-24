@@ -29,4 +29,10 @@ public class GameServiceTests {
         authDAO.createAuth(new AuthData(ALEX_TOKEN, "alex"));
         authDAO.createAuth(new AuthData(BOB_TOKEN, "bob"));
     }
+
+    //helper so join tests read clean
+    private int newGame() throws Exception {
+        return service.createGame(ALEX_TOKEN, new CreateGameRequest("game")).gameID();
+    }
+    
 }
