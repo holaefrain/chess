@@ -90,14 +90,16 @@
                     <!-- Attaches the JaCoCo agent to the test JVM so it can record which lines run -->
                     <execution>
                         <goals>
-                            </goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
                     </execution>
                     <!-- Turns the recorded data into an HTML report after the tests finish -->
                     <execution>
                         <id>report</id>
                         <phase>test</phase>
                         <goals>
-                            </goals>
+                            <goal>report</goal>
+                        </goals>
                     </execution>
                 </executions>
             </plugin>
