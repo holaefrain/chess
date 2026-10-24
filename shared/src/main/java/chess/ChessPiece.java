@@ -15,7 +15,11 @@ public class ChessPiece {
     private final ChessGame.TeamColor pieceColor;
     private final PieceType type;
 
-    /** Whether this piece has moved during the current game. Used by ChessGame to decide castling privleges. Excluded from equals/hashCode so that two boards with the same pieces in the same squares are equal */
+    /** 
+     * Whether this piece has moved during the current game. 
+     * Used by ChessGame to decide castling privleges. 
+     * Excluded from equals/hashCode so that two boards with the same
+     * pieces in the same squares are equal */
     private boolean hasMoved = false;
 
     // Bishop directions of travel, as pairs

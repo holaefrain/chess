@@ -16,7 +16,10 @@ public class ChessBoard {
     private final ChessPiece[][] squares = new ChessPiece[8][8];
 
     private static final ChessPiece.PieceType[] BACK_ROW = {
-        ChessPiece.PieceType.ROOK, ChessPiece.PieceType.KNIGHT, ChessPiece.PieceType.BISHOP, ChessPiece.PieceType.QUEEN, ChessPiece.PieceType.KING, ChessPiece.PieceType.BISHOP, ChessPiece.PieceType.KNIGHT, ChessPiece.PieceType.ROOK
+        ChessPiece.PieceType.ROOK, ChessPiece.PieceType.KNIGHT, 
+        ChessPiece.PieceType.BISHOP, ChessPiece.PieceType.QUEEN, 
+        ChessPiece.PieceType.KING, ChessPiece.PieceType.BISHOP, 
+        ChessPiece.PieceType.KNIGHT, ChessPiece.PieceType.ROOK
     };
 
     public ChessBoard() {
