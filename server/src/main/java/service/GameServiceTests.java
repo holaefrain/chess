@@ -83,4 +83,33 @@ public class GameServiceTests {
 
         Assertions.assertEquals(3, result.games().size());
     }
+
+    @Test
+    void listGamesBadTokenThrowsUnauthorized() {
+        Assertions.assertThrows(UnauthorizedException.class, () -> service.listGames("bad"));
+        Assertions.assertThrows(UnauthorizedException.class, () -> service.listGames(null));
+    }
+
+    @Test
+    void joinGameWhiteSuccess() throws Exception {
+        int gameID = newGame();
+
+        service.joinGame(ALEX_TOKEN, new JoinGameRequest("WHITE", gameID));
+
+        GameData game = gameDAO.getGame(gameID);
+        Assertions.assertEquals("alex", game.whiteUsername());
+        Assertions.assertNull(game.blackUsername());
+    }
+
+    @Test
+    void joinGameBlackSuccess() throws Exception {
+        int gameID = newGame();
+
+        service.joinGame(BOB_TOKEN, new JoinGameRequest("BLACK", gameID));
+
+        GameData game = gameDAO.getGame(gameID);
+        Assertions.assertNull(game.whiteUsername());
+        Assertions.assertEquals("bob", game.blackUsername());
+    }
+
 }
