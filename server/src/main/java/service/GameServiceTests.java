@@ -18,5 +18,15 @@ public class GameServiceTests {
     private static final String ALEX_TOKEN = "alex-token";
     private static final String BOB_TOKEN = "bob-token";
 
-    
+    @BeforeEach
+    void setUp() throws Exception {
+        gameDAO = new MemoryGameDAO();
+        authDAO = new MemoryAuthDAO();
+        service = new GameService(gameDAO, authDAO);
+
+        //seed two logged-in users straight into the auth store.
+        //skipping UserService keeps these tests about game logic only.
+        authDAO.createAuth(new AuthData(ALEX_TOKEN, "alex"));
+        authDAO.createAuth(new AuthData(BOB_TOKEN, "bob"));
+    }
 }
