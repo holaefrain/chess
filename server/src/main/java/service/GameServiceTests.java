@@ -143,5 +143,32 @@ public class GameServiceTests {
                 () -> service.joinGame(BOB_TOKEN, new JoinGameRequest("BLACK", gameID)));
     }
 
+    @Test
+    void joinGameBadColorThrowsBadRequest() throws Exception {
+        int gameID = newGame();
 
+        // Same cases the pass-off tests send, plus lowercase to lock in case-sensitivity
+        for (String color : new String[]{null, "", "GREEN", "white"}) {
+            Assertions.assertThrows(BadRequestException.class,
+                    () -> service.joinGame(ALEX_TOKEN, new JoinGameRequest(color, gameID)));
+        }
+    }
+
+    @Test
+    void joinGameBadGameIdThrowsBadRequest() {
+        Assertions.assertThrows(BadRequestException.class,
+                () -> service.joinGame(ALEX_TOKEN, new JoinGameRequest("WHITE", null)));
+        Assertions.assertThrows(BadRequestException.class,
+                () -> service.joinGame(ALEX_TOKEN, new JoinGameRequest("WHITE", 999)));
+        Assertions.assertThrows(BadRequestException.class,
+                () -> service.joinGame(ALEX_TOKEN, null));
+    }
+
+    @Test
+    void joinGameBadTokenThrowsUnauthorized() throws Exception {
+        int gameID = newGame();
+
+        Assertions.assertThrows(UnauthorizedException.class,
+                () -> service.joinGame("bad", new JoinGameRequest("WHITE", gameID)));
+    }
 }
