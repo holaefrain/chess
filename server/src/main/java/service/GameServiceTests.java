@@ -64,4 +64,23 @@ public class GameServiceTests {
         Assertions.assertThrows(BadRequestException.class,
                 () -> service.createGame(ALEX_TOKEN, null));
     }
+
+    @Test
+    void listGamesEmpty() throws Exception {
+        ListGamesResult result = service.listGames(ALEX_TOKEN);
+
+        Assertions.assertTrue(result.games().isEmpty());
+    }
+
+    @Test
+    void listGamesMultiple() throws Exception {
+        service.createGame(ALEX_TOKEN, new CreateGameRequest("one"));
+        service.createGame(ALEX_TOKEN, new CreateGameRequest("two"));
+        service.createGame(BOB_TOKEN, new CreateGameRequest("three"));
+
+        //any valid user sees every game
+        ListGamesResult result = service.listGames(BOB_TOKEN);
+
+        Assertions.assertEquals(3, result.games().size());
+    }
 }
