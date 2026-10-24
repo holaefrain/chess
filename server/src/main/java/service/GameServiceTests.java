@@ -34,5 +34,16 @@ public class GameServiceTests {
     private int newGame() throws Exception {
         return service.createGame(ALEX_TOKEN, new CreateGameRequest("game")).gameID();
     }
-    
+
+    @Test
+    void createGameSuccess() throws Exception {
+        CreateGameResult result = service.createGame(ALEX_TOKEN, new CreateGameRequest("first"));
+
+        Assertions.assertTrue(result.gameID() > 0);
+        GameData stored = gameDAO.getGame(result.gameID());
+        Assertions.assertEquals("first", stored.gameName());
+        Assertions.assertNull(stored.whiteUsername());
+        Assertions.assertNull(stored.blackUsername());
+        Assertions.assertNotNull(stored.game());
+    }
 }
