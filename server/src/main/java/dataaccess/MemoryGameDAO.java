@@ -12,7 +12,7 @@ public class MemoryGameDAO implements GameDAO {
     private final Map<Integer, GameData> games = new HashMap<>();
     private int nextID = 1;
 
-    @Override 
+    @Override
     public int createGame(String gameName) {
         int gameID = nextID++;
         games.put(gameID, new GameData(gameID, null, null, gameName, new ChessGame()));

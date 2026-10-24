@@ -52,7 +52,7 @@ public class UserServiceTests {
         Assertions.assertThrows(BadRequestException.class, () -> service.register(new RegisterRequest(null, "pw", "a@email.com")));
         Assertions.assertThrows(BadRequestException.class, () -> service.register(new RegisterRequest("alex", "pw", "")));
         Assertions.assertThrows(BadRequestException.class, () -> service.register(null));
-    } 
+    }
 
     //login success
     @Test

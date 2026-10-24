@@ -13,12 +13,12 @@ public class MemoryUserDAO implements UserDAO {
         users.put(user.username(), user);
     }
 
-    @Override 
+    @Override
     public UserData getUser(String username) {
         return users.get(username);
     }
 
-    @Override 
+    @Override
     public void clear() {
         users.clear();
     }

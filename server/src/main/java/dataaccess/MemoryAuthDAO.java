@@ -7,13 +7,13 @@ import java.util.Map;
 
 public class MemoryAuthDAO implements AuthDAO {
     private final Map<String, AuthData> auths = new HashMap<>();
-     
+
     @Override
     public void createAuth(AuthData auth) {
         auths.put(auth.authToken(), auth);
-    } 
+    }
 
-    @Override 
+    @Override
     public AuthData getAuth(String authToken) {
         return auths.get(authToken);
     }
@@ -23,7 +23,7 @@ public class MemoryAuthDAO implements AuthDAO {
         auths.remove(authToken);
     }
 
-    @Override 
+    @Override
     public void clear() {
         auths.clear();
     }
