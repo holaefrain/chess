@@ -34,7 +34,9 @@ public class UserService {
             throw new AlreadyTakenException();
         }
 
-        userDAO.createUser(new UserData(request.username(), request.password(), request.email()));
+        // Only the BCrypt hash is stored, so a leaked table never exposes real passwords
+        String passwordHash = BCrypt.hashpw(request.password(), BCrypt.gensalt());
+        userDAO.createUser(new UserData(request.username(), passwordHash, request.email()));
 
         // Registering logs the user in
         return createSession(request.username());
