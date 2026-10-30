@@ -8,6 +8,7 @@ import dataaccess.UserDAO;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mindrot.jbcrypt.BCrypt;
 
 public class UserServiceTests {
     private UserDAO userDAO;
@@ -52,6 +53,16 @@ public class UserServiceTests {
         Assertions.assertThrows(BadRequestException.class, () -> service.register(new RegisterRequest(null, "pw", "a@email.com")));
         Assertions.assertThrows(BadRequestException.class, () -> service.register(new RegisterRequest("alex", "pw", "")));
         Assertions.assertThrows(BadRequestException.class, () -> service.register(null));
+    }
+
+    //password is hashed before it reaches the DAO
+    @Test
+    void registerStoresHashedPassword() throws Exception {
+        service.register(validRegister);
+
+        String stored = userDAO.getUser("alex").password();
+        Assertions.assertNotEquals("pw", stored);
+        Assertions.assertTrue(BCrypt.checkpw("pw", stored));
     }
 
     //login success
