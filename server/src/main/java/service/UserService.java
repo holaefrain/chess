@@ -8,6 +8,8 @@ import model.UserData;
 
 import java.util.UUID;
 
+import org.mindrot.jbcrypt.BCrypt;
+
 public class UserService {
     private final UserDAO userDAO;
     private final AuthDAO authDAO;
@@ -47,7 +49,7 @@ public class UserService {
         UserData user = userDAO.getUser(request.username());
 
         // Unknown user and wrong password both get the same 401
-        if (user == null || !user.password().equals(request.password())) {
+        if (user == null || !BCrypt.checkpw(request.password(), user.password())) {
             throw new UnauthorizedException();
         }
 
