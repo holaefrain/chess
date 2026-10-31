@@ -24,4 +24,12 @@ public class MySqlUserDAOTests {
 
         Assertions.assertEquals(alex, userDAO.getUser("alex"));
     }
+    
+    //username is the primary key
+    @Test
+    void createUserDuplicateUsernameThrows() throws Exception {
+        userDAO.createUser(alex);
+
+        Assertions.assertThrows(DataAccessException.class, () -> userDAO.createUser(alex));
+    }
 }
