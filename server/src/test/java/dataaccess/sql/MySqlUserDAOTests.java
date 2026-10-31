@@ -32,4 +32,34 @@ public class MySqlUserDAOTests {
 
         Assertions.assertThrows(DataAccessException.class, () -> userDAO.createUser(alex));
     }
+
+    //every column is NOT NULL
+    @Test
+    void createUserMissingFieldThrows() {
+        Assertions.assertThrows(DataAccessException.class,
+                () -> userDAO.createUser(new UserData("alex", null, "a@mail.com")));
+    }
+
+    @Test
+    void getUserReturnsMatchingUser() throws Exception {
+        UserData bob = new UserData("bob", "other-pw", "b@mail.com");
+        userDAO.createUser(alex);
+        userDAO.createUser(bob);
+
+        Assertions.assertEquals(bob, userDAO.getUser("bob"));
+    }
+
+    @Test
+    void getUserMissingReturnsNull() throws Exception {
+        Assertions.assertNull(userDAO.getUser("nobody"));
+    }
+
+    @Test
+    void clearRemovesAllUsers() throws Exception {
+        userDAO.createUser(alex);
+
+        userDAO.clear();
+
+        Assertions.assertNull(userDAO.getUser("alex"));
+    }
 }
