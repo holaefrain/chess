@@ -2,11 +2,12 @@ package server;
 
 import com.google.gson.JsonSyntaxException;
 import dataaccess.AuthDAO;
+import dataaccess.DataAccessException;
 import dataaccess.GameDAO;
-import dataaccess.MemoryAuthDAO;
-import dataaccess.MemoryGameDAO;
-import dataaccess.MemoryUserDAO;
 import dataaccess.UserDAO;
+import dataaccess.sql.MySqlAuthDAO;
+import dataaccess.sql.MySqlGameDAO;
+import dataaccess.sql.MySqlUserDAO;
 import io.javalin.*;
 import service.AlreadyTakenException;
 import service.BadRequestException;
@@ -38,9 +39,17 @@ public class Server {
 
     // One shared set of DAOs so every service sees the same data
     private void registerEndpoints() {
-        UserDAO userDAO = new MemoryUserDAO();
-        GameDAO gameDAO = new MemoryGameDAO();
-        AuthDAO authDAO = new MemoryAuthDAO();
+        UserDAO userDAO;
+        GameDAO gameDAO;
+        AuthDAO authDAO;
+        try {
+            userDAO = new MySqlUserDAO();
+            gameDAO = new MySqlGameDAO();
+            authDAO = new MySqlAuthDAO();
+        } catch (DataAccessException ex) {
+            // Every endpoint needs the tables, so fail at startup rather than on each request
+            throw new IllegalStateException("Error: unable to set up database", ex);
+        }
 
         ClearHandler clearHandler = new ClearHandler(new ClearService(userDAO, gameDAO, authDAO));
         UserHandler userHandler = new UserHandler(new UserService(userDAO, authDAO));
