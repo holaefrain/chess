@@ -4,7 +4,11 @@ package client;
 public class ResponseException extends Exception {
     
     public enum Reason {
-        BAD_REQUEST("That request wasn't valide. Check what you typed and try again."), UNAUTHORIZED("Not authorized. Check your username and password."), ALREADY_TAKEN("Already taken. Choose a different one."), SERVER_ERROR("The server had a problem. Please try again later."), UNREACHABLE("Can't reach the server. Make sure it is running");
+        BAD_REQUEST("That request wasn't valid. Check what you typed and try again."), 
+        UNAUTHORIZED("Not authorized. Check your username and password."), 
+        ALREADY_TAKEN("Already taken. Choose a different one."), 
+        SERVER_ERROR("The server had a problem. Please try again later."), 
+        UNREACHABLE("Can't reach the server. Make sure it is running.");
 
         private final String message;
 
