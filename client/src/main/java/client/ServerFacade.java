@@ -31,4 +31,11 @@ public class ServerFacade {
         }
         return builder.build();
     }
+
+    private static HttpRequest.BodyPublisher bodyPublisher(Object body) {
+        if (body == null) {
+            return HttpRequest.BodyPublishers.noBody();
+        }
+        return HttpRequest.BodyPublishers.ofString(GSON.toJson(body));
+    }
 }
