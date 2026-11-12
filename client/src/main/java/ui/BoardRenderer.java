@@ -21,4 +21,36 @@ public final class BoardRenderer {
 
     private BoardRenderer() {
     }
+
+    //black sees the board rotated; white and observers see a1 at the bottom left
+    public static String render(ChessBoard board, ChessGame.TeamColor perspective) {
+        boolean whiteView = perspective != ChessGame.TeamColor.BLACK;
+        StringBuilder out = new StringBuilder(EscapeSequences.SET_TEXT_BOLD);
+        appendColumnLabels(out, whiteView);
+        for (int i = 0; i < BOARD_SIZE; i++) {
+            int row = whiteView ? BOARD_SIZE - i : i + 1;
+            appendRow(out, board, row, whiteView);
+        }
+        appendColumnLabels(out, whiteView);
+        return out.append(EscapeSequences.RESET_TEXT_BOLD_FAINT).toString();
+    }
+
+    private static void appendColumnLabels(StringBuilder out, boolean whiteView) {
+        out.append(borderCell(' '));
+        for (int i = 0; i < BOARD_SIZE; i++) {
+            out.append(borderCell(COLUMN_LETTERS.charAt(columnAt(i, whiteView) - 1)));
+        }
+        out.append(borderCell(' ')).append(END_OF_LINE);
+    }
+
+    private static void appendRow(StringBuilder out, ChessBoard board, int row, boolean whiteView) {
+        char label = Character.forDigit(row, 10);
+        out.append(borderCell(label));
+        for (int i = 0; i < BOARD_SIZE; i++) {
+            int col = columnAt(i, whiteView);
+            ChessPiece piece = board.getPiece(new ChessPosition(row, col));
+            out.append(square(piece, isLightSquare(row, col)));
+        }
+        out.append(borderCell(label)).append(END_OF_LINE);
+    }
 }
