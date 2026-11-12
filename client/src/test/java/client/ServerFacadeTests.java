@@ -67,6 +67,11 @@ public class ServerFacadeTests {
         Assertions.assertEquals(ResponseException.Reason.ALREADY_TAKEN, ex.reason());
     }
 
+    //most tests need a logged-in user to start from
+    private static AuthData registerPlayer() throws ResponseException {
+        return facade.register("player1", "password", "p1@email.com");
+    }
+
     //asks the OS for a free port, then releases it so nothing is listening there
     private static int unusedPort() throws IOException {
         try (ServerSocket socket = new ServerSocket(0)) {
