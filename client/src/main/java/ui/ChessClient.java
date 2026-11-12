@@ -43,4 +43,29 @@ public class ChessClient {
             return describe(ex);
         }
     }
+
+    //a rejected token means the server no longer knows this login
+    private String endSession() {
+        signOut();
+        return "Your session has ended. Please log in again.";
+    }
+
+    private String evalSignedOut(String command, String[] params) throws ResponseException {
+        return switch (command) {
+            case "help" -> signedOutHelp();
+            case "quit" -> quit();
+            case "login" -> login(params);
+            case "register" -> register(params);
+            default -> UNKNOWN_COMMAND;
+        };
+    }
+
+    private String evalSignedIn(String command, String[] params) throws ResponseException {
+        return switch (command) {
+            case "help" -> signedInHelp();
+            case "quit" -> quit();
+            case "logout" -> logout();
+            default -> UNKNOWN_COMMAND;
+        };
+    }
 }
