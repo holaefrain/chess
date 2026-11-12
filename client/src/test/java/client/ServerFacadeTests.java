@@ -1,5 +1,6 @@
 package client;
 
+import chess.ChessGame;
 import model.AuthData;
 import model.GameData;
 import org.junit.jupiter.api.AfterAll;
@@ -132,6 +133,34 @@ public class ServerFacadeTests {
         ResponseException ex = Assertions.assertThrows(ResponseException.class,
                 () -> facade.listGames("not-a-real-token"));
         Assertions.assertEquals(ResponseException.Reason.UNAUTHORIZED, ex.reason());
+    }
+    
+    @Test
+    void joinGameSuccess() throws ResponseException {
+        AuthData auth = registerPlayer();
+        int gameID = facade.createGame(auth.authToken(), "first game");
+        facade.joinGame(auth.authToken(), gameID, ChessGame.TeamColor.WHITE);
+        GameData game = facade.listGames(auth.authToken()).get(0);
+        Assertions.assertEquals("player1", game.whiteUsername());
+        Assertions.assertNull(game.blackUsername());
+    }
+
+    @Test
+    void joinGameColorTaken() throws ResponseException {
+        AuthData auth = registerPlayer();
+        int gameID = facade.createGame(auth.authToken(), "first game");
+        facade.joinGame(auth.authToken(), gameID, ChessGame.TeamColor.WHITE);
+        ResponseException ex = Assertions.assertThrows(ResponseException.class,
+                () -> facade.joinGame(auth.authToken(), gameID, ChessGame.TeamColor.WHITE));
+        Assertions.assertEquals(ResponseException.Reason.ALREADY_TAKEN, ex.reason());
+    }
+
+    @Test
+    void joinGameUnknownGame() throws ResponseException {
+        AuthData auth = registerPlayer();
+        ResponseException ex = Assertions.assertThrows(ResponseException.class,
+                () -> facade.joinGame(auth.authToken(), 9999, ChessGame.TeamColor.WHITE));
+        Assertions.assertEquals(ResponseException.Reason.BAD_REQUEST, ex.reason());
     }
 
     //most tests need a logged-in user to start from
