@@ -67,6 +67,22 @@ public class ServerFacadeTests {
         Assertions.assertEquals(ResponseException.Reason.ALREADY_TAKEN, ex.reason());
     }
 
+    @Test
+    void loginSuccess() throws ResponseException {
+        registerPlayer();
+        AuthData auth = facade.login("player1", "password");
+        Assertions.assertEquals("player1", auth.username());
+        Assertions.assertTrue(auth.authToken().length() > 10);
+    }
+
+    @Test
+    void loginWrongPassword() throws ResponseException {
+        registerPlayer();
+        ResponseException ex = Assertions.assertThrows(ResponseException.class,
+                () -> facade.login("player1", "wrong"));
+        Assertions.assertEquals(ResponseException.Reason.UNAUTHORIZED, ex.reason());
+    }
+
     //most tests need a logged-in user to start from
     private static AuthData registerPlayer() throws ResponseException {
         return facade.register("player1", "password", "p1@email.com");
