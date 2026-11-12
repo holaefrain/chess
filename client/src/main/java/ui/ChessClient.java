@@ -28,4 +28,19 @@ public class ChessClient {
     public State state() {
         return state;
     }
+
+    //server failures come back as readable text instead of an exception
+    public String eval(String input) {
+        String[] tokens = input.trim().split("\\s+");
+        String command = tokens[0].toLowerCase();
+        String[] params = Arrays.copyOfRange(tokens, 1, tokens.length);
+        try {
+            if (state == State.SIGNED_OUT) {
+                return evalSignedOut(command, params);
+            }
+            return evalSignedIn(command, params);
+        } catch (ResponseException ex) {
+            return describe(ex);
+        }
+    }
 }
