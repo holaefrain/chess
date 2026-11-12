@@ -80,4 +80,6 @@ public class ServerFacade {
     }
     private record RegisterRequest(String username, String password, String email) {
     }
+    private record LoginRequest(String username, String password) {
+    }
 }
