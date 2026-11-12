@@ -32,6 +32,11 @@ public class ServerFacade {
         return send(buildRequest("POST", "/user", null, body), AuthData.class);
     }
 
+    public AuthData login(String username, String password) throws ResponseException {
+        LoginRequest body = new LoginRequest(username, password);
+        return send(buildRequest("POST", "/session", null, body), AuthData.class);
+    }
+
     //authToken and body are optional; pass null to leave them off
     private HttpRequest buildRequest(String method, String path, String authToken, Object body) {
         HttpRequest.Builder builder = HttpRequest.newBuilder()
