@@ -1,5 +1,6 @@
 package client;
 
+import chess.ChessGame;
 import com.google.gson.Gson;
 import model.AuthData;
 import model.GameData;
@@ -52,6 +53,11 @@ public class ServerFacade {
         return send(buildRequest("GET", "/game", authToken, null), ListGamesResult.class).games();
     }
 
+    public void joinGame(String authToken, int gameID, ChessGame.TeamColor color) throws ResponseException {
+        JoinGameRequest body = new JoinGameRequest(color.name(), gameID);
+        send(buildRequest("PUT", "/game", authToken, body), null);
+    }
+
     //authToken and body are optional; pass null to leave them off
     private HttpRequest buildRequest(String method, String path, String authToken, Object body) {
         HttpRequest.Builder builder = HttpRequest.newBuilder()
@@ -102,5 +108,7 @@ public class ServerFacade {
     private record CreateGameResult(int gameID) {
     }
     private record ListGamesResult(List<GameData> games) {
+    }
+    private record JoinGameRequest(String playerColor, int gameID) {
     }
 }
