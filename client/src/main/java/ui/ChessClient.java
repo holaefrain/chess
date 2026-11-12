@@ -3,8 +3,11 @@ package ui;
 import client.ResponseException;
 import client.ServerFacade;
 import model.AuthData;
+import model.GameData;
 
 import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 
 //turns one line of user input into a server call and the text to show for it
 public class ChessClient {
@@ -20,6 +23,9 @@ public class ChessClient {
     private final ServerFacade facade;
     private State state = State.SIGNED_OUT;
     private String authToken;
+
+    //games in the order last shown; list number N is index N - 1
+    private List<GameData> games = new ArrayList<>();
 
     public ChessClient(ServerFacade facade) {
         this.facade = facade;
