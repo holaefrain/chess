@@ -44,6 +44,16 @@ public class ChessClient {
         }
     }
 
+    //the same failure means different things before and after login
+    private String describe(ResponseException ex) {
+        boolean signedOut = state == State.SIGNED_OUT;
+        return switch (ex.reason()) {
+            case UNAUTHORIZED -> signedOut ? "Wrong username or password." : endSession();
+            case ALREADY_TAKEN -> signedOut ? "That username is already taken." : "That color is already taken.";
+            default -> ex.getMessage();
+        };
+    }
+
     //a rejected token means the server no longer knows this login
     private String endSession() {
         signOut();
