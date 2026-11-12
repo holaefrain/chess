@@ -100,6 +100,20 @@ public class ServerFacadeTests {
         Assertions.assertEquals(ResponseException.Reason.UNAUTHORIZED, ex.reason());
     }
 
+    @Test
+    void createGameSuccess() throws ResponseException {
+        AuthData auth = registerPlayer();
+        int gameID = facade.createGame(auth.authToken(), "first game");
+        Assertions.assertTrue(gameID > 0);
+    }
+
+    @Test
+    void createGameBadToken() {
+        ResponseException ex = Assertions.assertThrows(ResponseException.class,
+                () -> facade.createGame("not-a-real-token", "first game"));
+        Assertions.assertEquals(ResponseException.Reason.UNAUTHORIZED, ex.reason());
+    }
+
     //most tests need a logged-in user to start from
     private static AuthData registerPlayer() throws ResponseException {
         return facade.register("player1", "password", "p1@email.com");
