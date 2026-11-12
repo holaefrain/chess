@@ -1,6 +1,7 @@
 package client;
 
 import com.google.gson.Gson;
+import model.AuthData;
 
 import java.io.IOException;
 import java.net.URI;
@@ -24,6 +25,11 @@ public class ServerFacade {
 
     public void clear() throws ResponseException {
         send(buildRequest("DELETE", "/db", null, null), null);
+    }
+
+    public AuthData register(String username, String password, String email) throws ResponseException {
+        RegisterRequest body = new RegisterRequest(username, password, email);
+    return send(buildRequest("POST", "/user", null, body), AuthData.class);
     }
 
     //authToken and body are optional; pass null to leave them off
