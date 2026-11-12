@@ -124,6 +124,35 @@ public class ChessClient {
         state = State.QUIT;
         return "Goodbye!";
     }
+    
+    private String create(String[] params) throws ResponseException {
+        if (params.length == 0) {
+            return "Usage: create <NAME>";
+        }
+        String gameName = String.join(" ", params);
+        facade.createGame(authToken, gameName);
+        return "Created game " + gameName + ". Use list to see it.";
+    }
+
+    private String list() throws ResponseException {
+        games = facade.listGames(authToken);
+        if (games.isEmpty()) {
+            return "No games yet. Use create <NAME> to start one.";
+        }
+        StringBuilder out = new StringBuilder();
+        for (int i = 0; i < games.size(); i++) {
+            GameData game = games.get(i);
+            out.append(i + 1).append(". ").append(game.gameName())
+                    .append(" | white: ").append(seat(game.whiteUsername()))
+                    .append(" | black: ").append(seat(game.blackUsername()))
+                    .append("\n");
+        }
+        return out.toString().stripTrailing();
+    }
+
+    private static String seat(String username) {
+        return username == null ? "(open)" : username;
+    }
 
     private static String signedOutHelp() {
         return String.join("\n",
