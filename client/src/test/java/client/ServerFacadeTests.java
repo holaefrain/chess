@@ -1,5 +1,6 @@
 package client;
 
+import model.AuthData;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -35,8 +36,12 @@ public class ServerFacadeTests {
     }
 
     @Test
-    void clearSuccess() {
-        Assertions.assertDoesNotThrow(() -> facade.clear());
+    void clearSuccess() throws ResponseException {
+        registerPlayer();
+        facade.clear();
+        //the same username is free again only if clear really wiped the users
+        AuthData auth = registerPlayer();
+        Assertions.assertEquals("player1", auth.username());
     }
 
     @Test
