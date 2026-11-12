@@ -116,6 +116,7 @@ public class ChessClient {
 
     private void signOut() {
         authToken = null;
+        games = new ArrayList<>();
         state = State.SIGNED_OUT;
     }
 
