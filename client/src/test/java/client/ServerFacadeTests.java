@@ -1,6 +1,7 @@
 package client;
 
 import model.AuthData;
+import model.GameData;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -10,6 +11,7 @@ import server.Server;
 
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.util.List;
 
 public class ServerFacadeTests {
 
@@ -111,6 +113,24 @@ public class ServerFacadeTests {
     void createGameBadToken() {
         ResponseException ex = Assertions.assertThrows(ResponseException.class,
                 () -> facade.createGame("not-a-real-token", "first game"));
+        Assertions.assertEquals(ResponseException.Reason.UNAUTHORIZED, ex.reason());
+    }
+
+    @Test
+    void listGamesSuccess() throws ResponseException {
+        AuthData auth = registerPlayer();
+        facade.createGame(auth.authToken(), "first game");
+        facade.createGame(auth.authToken(), "second game");
+        List<GameData> games = facade.listGames(auth.authToken());
+        Assertions.assertEquals(2, games.size());
+        Assertions.assertEquals("first game", games.get(0).gameName());
+        Assertions.assertEquals("second game", games.get(1).gameName());
+    }
+
+    @Test
+    void listGamesBadToken() {
+        ResponseException ex = Assertions.assertThrows(ResponseException.class,
+                () -> facade.listGames("not-a-real-token"));
         Assertions.assertEquals(ResponseException.Reason.UNAUTHORIZED, ex.reason());
     }
 
