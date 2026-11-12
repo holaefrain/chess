@@ -83,6 +83,23 @@ public class ServerFacadeTests {
         Assertions.assertEquals(ResponseException.Reason.UNAUTHORIZED, ex.reason());
     }
 
+    @Test
+    void logoutSuccess() throws ResponseException {
+        AuthData auth = registerPlayer();
+        facade.logout(auth.authToken());
+        //a logged-out token is dead, so using it again must fail
+        ResponseException ex = Assertions.assertThrows(ResponseException.class,
+                () -> facade.logout(auth.authToken()));
+        Assertions.assertEquals(ResponseException.Reason.UNAUTHORIZED, ex.reason());
+    }
+
+    @Test
+    void logoutBadToken() {
+        ResponseException ex = Assertions.assertThrows(ResponseException.class,
+                () -> facade.logout("not-a-real-token"));
+        Assertions.assertEquals(ResponseException.Reason.UNAUTHORIZED, ex.reason());
+    }
+
     //most tests need a logged-in user to start from
     private static AuthData registerPlayer() throws ResponseException {
         return facade.register("player1", "password", "p1@email.com");
