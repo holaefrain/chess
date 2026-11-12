@@ -29,7 +29,7 @@ public class ServerFacade {
 
     public AuthData register(String username, String password, String email) throws ResponseException {
         RegisterRequest body = new RegisterRequest(username, password, email);
-    return send(buildRequest("POST", "/user", null, body), AuthData.class);
+        return send(buildRequest("POST", "/user", null, body), AuthData.class);
     }
 
     //authToken and body are optional; pass null to leave them off
@@ -72,5 +72,7 @@ public class ServerFacade {
             case 403 -> ResponseException.Reason.ALREADY_TAKEN;
             default -> ResponseException.Reason.SERVER_ERROR;
         };
+    }
+    private record RegisterRequest(String username, String password, String email) {
     }
 }
