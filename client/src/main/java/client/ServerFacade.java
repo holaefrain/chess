@@ -41,6 +41,11 @@ public class ServerFacade {
         send(buildRequest("DELETE", "/session", authToken, null), null);
     }
 
+    public int createGame(String authToken, String gameName) throws ResponseException {
+        CreateGameRequest body = new CreateGameRequest(gameName);
+        return send(buildRequest("POST", "/game", authToken, body), CreateGameResult.class).gameID();
+    }
+
     //authToken and body are optional; pass null to leave them off
     private HttpRequest buildRequest(String method, String path, String authToken, Object body) {
         HttpRequest.Builder builder = HttpRequest.newBuilder()
@@ -85,5 +90,9 @@ public class ServerFacade {
     private record RegisterRequest(String username, String password, String email) {
     }
     private record LoginRequest(String username, String password) {
+    }
+    private record CreateGameRequest(String gameName) {
+    }
+    private record CreateGameResult(int gameID) {
     }
 }
