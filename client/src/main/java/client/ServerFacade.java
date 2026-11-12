@@ -1,5 +1,11 @@
 package client;
 
+import com.google.gson.Gson;
+
+import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpResponse;
 import java.net.http.HttpRequest;
 import java.time.Duration;
 
@@ -37,5 +43,28 @@ public class ServerFacade {
             return HttpRequest.BodyPublishers.noBody();
         }
         return HttpRequest.BodyPublishers.ofString(GSON.toJson(body));
+    }
+
+    //pass a null responseType when the endpoints return nothing
+    private <T> T send(HttpRequest request, Class<T> responseType) throws ResponseException {
+        HttpResponse<String> response;
+        try {
+            response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        } catch (IOException | InterruptedException ex) {
+            throw new ResponseException(ResponseException.Reason.UNREACHABLE);
+        }
+        if (response.statusCode() != HTTP_OK) {
+            throw new ResponseException(reasonFor(response.statusCode()));
+        }
+        return responseType == null ? null : GSON.fromJson(response.body(), responseType);
+    }
+
+    private static ResponseException.Reason reasonFor(int status) {
+        return switch (status) {
+            case 400 -> ResponseException.Reason.BAD_REQUEST;
+            case 401 -> ResponseException.Reason.UNAUTHORIZED;
+            case 409 -> ResponseException.Reason.ALREADY_TAKEN;
+            default -> ResponseException.Reason.SERVER_ERROR;
+        };
     }
 }
