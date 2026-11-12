@@ -222,6 +222,8 @@ public class ChessClient {
         return String.join("\n",
                 helpLine("create <NAME>", "create a new game"),
                 helpLine("list", "show all games"),
+                helpLine("join <NUMBER> <WHITE|BLACK>", "play a game as white or black"),
+                helpLine("observe <NUMBER>", "watch a game as an observer"),
                 helpLine("logout", "log out of your account"),
                 helpLine("quit", "exit the program"),
                 helpLine("help", "show these commands"));
