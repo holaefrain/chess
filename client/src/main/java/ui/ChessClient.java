@@ -68,4 +68,41 @@ public class ChessClient {
             default -> UNKNOWN_COMMAND;
         };
     }
+
+    private String register(String[] params) throws ResponseException {
+        if (params.length != 3) {
+            return "Usage: register <USERNAME> <PASSWORD> <EMAIL>";
+        }
+        signIn(facade.register(params[0], params[1], params[2]));
+        return "Registered and logged in as " + params[0] + ".";
+    }
+
+    private String login(String[] params) throws ResponseException {
+        if (params.length != 2) {
+            return "Usage: login <USERNAME> <PASSWORD>";
+        }
+        signIn(facade.login(params[0], params[1]));
+        return "Logged in as " + params[0] + ".";
+    }
+
+    private void signIn(AuthData auth) {
+        authToken = auth.authToken();
+        state = State.SIGNED_IN;
+    }
+
+    private String logout() throws ResponseException {
+        facade.logout(authToken);
+        signOut();
+        return "Logged out.";
+    }
+
+    private void signOut() {
+        authToken = null;
+        state = State.SIGNED_OUT;
+    }
+
+    private String quit() {
+        state = State.QUIT;
+        return "Goodbye!";
+    }
 }
