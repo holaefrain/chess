@@ -5,8 +5,8 @@ import client.ServerFacade;
 import model.AuthData;
 import model.GameData;
 
-import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 //turns one line of user input into a server call and the text to show for it
