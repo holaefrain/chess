@@ -2,6 +2,7 @@ package client;
 
 import com.google.gson.Gson;
 import model.AuthData;
+import model.GameData;
 
 import java.io.IOException;
 import java.net.URI;
@@ -9,6 +10,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpResponse;
 import java.net.http.HttpRequest;
 import java.time.Duration;
+import java.util.List;
 
 //only class that knows the server is reached over HTTP and JSON
 public class ServerFacade {
@@ -44,6 +46,10 @@ public class ServerFacade {
     public int createGame(String authToken, String gameName) throws ResponseException {
         CreateGameRequest body = new CreateGameRequest(gameName);
         return send(buildRequest("POST", "/game", authToken, body), CreateGameResult.class).gameID();
+    }
+
+    public List<GameData> listGames(String authToken) throws ResponseException {
+        return send(buildRequest("GET", "/game", authToken, null), ListGamesResult.class).games();
     }
 
     //authToken and body are optional; pass null to leave them off
@@ -94,5 +100,7 @@ public class ServerFacade {
     private record CreateGameRequest(String gameName) {
     }
     private record CreateGameResult(int gameID) {
+    }
+    private record ListGamesResult(List<GameData> games) {
     }
 }
