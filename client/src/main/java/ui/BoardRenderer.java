@@ -53,4 +53,38 @@ public final class BoardRenderer {
         }
         out.append(borderCell(label)).append(END_OF_LINE);
     }
+
+    //screen position 0-7 to board column 1-8; black sees column h on the left
+    private static int columnAt(int index, boolean whiteView) {
+        return whiteView ? index + 1 : BOARD_SIZE - index;
+    }
+
+    //a1 is row 1 col 1 (even sum) and must be dark, so odd sums are light
+    private static boolean isLightSquare(int row, int col) {
+        return (row + col) % 2 != 0;
+    }
+
+    private static String borderCell(char label) {
+        return BORDER + " " + label + " ";
+    }
+
+    private static String square(ChessPiece piece, boolean light) {
+        String background = light ? LIGHT_SQUARE : DARK_SQUARE;
+        if (piece == null) {
+            return background + "   ";
+        }
+        String color = piece.getTeamColor() == ChessGame.TeamColor.WHITE ? WHITE_PIECE : BLACK_PIECE;
+        return background + color + " " + letter(piece.getPieceType()) + " ";
+    }
+
+    private static char letter(ChessPiece.PieceType type) {
+        return switch (type) {
+            case KING -> 'K';
+            case QUEEN -> 'Q';
+            case BISHOP -> 'B';
+            case KNIGHT -> 'N';
+            case ROOK -> 'R';
+            case PAWN -> 'P';
+        };
+    }
 }
