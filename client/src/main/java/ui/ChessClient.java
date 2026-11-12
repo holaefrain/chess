@@ -81,6 +81,8 @@ public class ChessClient {
             case "help" -> signedInHelp();
             case "quit" -> quit();
             case "logout" -> logout();
+            case "create" -> create(params);
+            case "list" -> list();
             default -> UNKNOWN_COMMAND;
         };
     }
