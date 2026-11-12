@@ -37,6 +37,10 @@ public class ServerFacade {
         return send(buildRequest("POST", "/session", null, body), AuthData.class);
     }
 
+    public void logout(String authToken) throws ResponseException {
+        send(buildRequest("DELETE", "/session", authToken, null), null);
+    }
+
     //authToken and body are optional; pass null to leave them off
     private HttpRequest buildRequest(String method, String path, String authToken, Object body) {
         HttpRequest.Builder builder = HttpRequest.newBuilder()
