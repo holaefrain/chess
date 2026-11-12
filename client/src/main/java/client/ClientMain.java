@@ -1,13 +1,10 @@
 package client;
 
-import ui.ChessClient;
-import ui.Repl;
+import chess.*;
 
 public class ClientMain {
-    private static final int SERVER_PORT = 8080;
-
     public static void main(String[] args) {
-        ServerFacade facade = new ServerFacade(SERVER_PORT);
-        new Repl(new ChessClient(facade)).run();
+        var piece = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN);
+        System.out.println("♕ 240 Chess Client: " + piece);
     }
 }
