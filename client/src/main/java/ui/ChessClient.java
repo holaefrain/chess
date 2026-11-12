@@ -1,5 +1,6 @@
 package ui;
 
+import chess.ChessGame;
 import client.ResponseException;
 import client.ServerFacade;
 import model.AuthData;
@@ -19,6 +20,8 @@ public class ChessClient {
     }
 
     private static final String UNKNOWN_COMMAND = "Unknown command. Type help to see what you can do.";
+
+    private static final String NO_SUCH_GAME = "No game with that number. Use list to see the current games.";
 
     private final ServerFacade facade;
     private State state = State.SIGNED_OUT;
@@ -83,6 +86,8 @@ public class ChessClient {
             case "logout" -> logout();
             case "create" -> create(params);
             case "list" -> list();
+            case "join" -> join(params);
+            case "observe" -> observe(params);
             default -> UNKNOWN_COMMAND;
         };
     }
@@ -152,6 +157,57 @@ public class ChessClient {
 
     private static String seat(String username) {
         return username == null ? "(open)" : username;
+    }
+
+    private String join(String[] params) throws ResponseException {
+        if (params.length != 2) {
+            return "Usage: join <NUMBER> <WHITE|BLACK>";
+        }
+        GameData game = gameByNumber(params[0]);
+        if (game == null) {
+            return NO_SUCH_GAME;
+        }
+        ChessGame.TeamColor color = parseColor(params[1]);
+        if (color == null) {
+            return "Color must be WHITE or BLACK.";
+        }
+        facade.joinGame(authToken, game.gameID(), color);
+        return "Joined " + game.gameName() + " as " + color + ".\n" + drawBoard(game, color);
+    }
+
+    //observing needs no server call until phase 6
+    private String observe(String[] params) {
+        if (params.length != 1) {
+            return "Usage: observe <NUMBER>";
+        }
+        GameData game = gameByNumber(params[0]);
+        if (game == null) {
+            return NO_SUCH_GAME;
+        }
+        return "Observing " + game.gameName() + ".\n" + drawBoard(game, ChessGame.TeamColor.WHITE);
+    }
+
+    //null when the text is not a number from the last list
+    private GameData gameByNumber(String text) {
+        try {
+            int number = Integer.parseInt(text);
+            boolean listed = number >= 1 && number <= games.size();
+            return listed ? games.get(number - 1) : null;
+        } catch (NumberFormatException ex) {
+            return null;
+        }
+    }
+
+    private static ChessGame.TeamColor parseColor(String text) {
+        return switch (text.toUpperCase()) {
+            case "WHITE" -> ChessGame.TeamColor.WHITE;
+            case "BLACK" -> ChessGame.TeamColor.BLACK;
+            default -> null;
+        };
+    }
+
+    private static String drawBoard(GameData game, ChessGame.TeamColor perspective) {
+        return BoardRenderer.render(game.game().getBoard(), perspective);
     }
 
     private static String signedOutHelp() {
