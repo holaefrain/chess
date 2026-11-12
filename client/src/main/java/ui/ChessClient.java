@@ -124,7 +124,7 @@ public class ChessClient {
         state = State.QUIT;
         return "Goodbye!";
     }
-    
+
     private String create(String[] params) throws ResponseException {
         if (params.length == 0) {
             return "Usage: create <NAME>";
@@ -164,6 +164,8 @@ public class ChessClient {
 
     private static String signedInHelp() {
         return String.join("\n",
+                helpLine("create <NAME>", "create a new game"),
+                helpLine("list", "show all games"),
                 helpLine("logout", "log out of your account"),
                 helpLine("quit", "exit the program"),
                 helpLine("help", "show these commands"));
