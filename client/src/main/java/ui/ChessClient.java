@@ -105,4 +105,24 @@ public class ChessClient {
         state = State.QUIT;
         return "Goodbye!";
     }
+
+    private static String signedOutHelp() {
+        return String.join("\n",
+                helpLine("register <USERNAME> <PASSWORD> <EMAIL>", "create an account"),
+                helpLine("login <USERNAME> <PASSWORD>", "log in to play chess"),
+                helpLine("quit", "exit the program"),
+                helpLine("help", "show these commands"));
+    }
+
+    private static String signedInHelp() {
+        return String.join("\n",
+                helpLine("logout", "log out of your account"),
+                helpLine("quit", "exit the program"),
+                helpLine("help", "show these commands"));
+    }
+
+    private static String helpLine(String command, String description) {
+        return EscapeSequences.SET_TEXT_COLOR_BLUE + command
+                + EscapeSequences.RESET_TEXT_COLOR + " - " + description;
+    }
 }
