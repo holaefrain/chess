@@ -51,6 +51,22 @@ public class ServerFacadeTests {
         Assertions.assertEquals(ResponseException.Reason.UNREACHABLE, ex.reason());
     }
 
+
+    @Test
+    void registerSuccess() throws ResponseException {
+        AuthData auth = facade.register("player1", "password", "p1@email.com");
+        Assertions.assertEquals("player1", auth.username());
+        Assertions.assertTrue(auth.authToken().length() > 10);
+    }
+
+    @Test
+    void registerDuplicateUsername() throws ResponseException {
+        registerPlayer();
+        ResponseException ex = Assertions.assertThrows(ResponseException.class,
+                () -> facade.register("player1", "other", "other@email.com"));
+        Assertions.assertEquals(ResponseException.Reason.ALREADY_TAKEN, ex.reason());
+    }
+
     //asks the OS for a free port, then releases it so nothing is listening there
     private static int unusedPort() throws IOException {
         try (ServerSocket socket = new ServerSocket(0)) {
