@@ -18,7 +18,7 @@ public class ServerFacade {
     private final HttpClient httpClient = HttpClient.newHttpClient();
     private final String serverUrl;
 
-    private ServerFacade(int port) {
+    public ServerFacade(int port) {
         serverUrl = "http://localhost:" + port;
     }
 
@@ -63,7 +63,7 @@ public class ServerFacade {
         return switch (status) {
             case 400 -> ResponseException.Reason.BAD_REQUEST;
             case 401 -> ResponseException.Reason.UNAUTHORIZED;
-            case 409 -> ResponseException.Reason.ALREADY_TAKEN;
+            case 403 -> ResponseException.Reason.ALREADY_TAKEN;
             default -> ResponseException.Reason.SERVER_ERROR;
         };
     }
